@@ -1,0 +1,11 @@
+--- simulavr-1.0.0.broke/src/systemclock.cpp	2012-07-01 16:57:20.000000000 +0200
++++ simulavr-1.0.0.fixed/src/systemclock.cpp	2012-07-01 16:57:42.000000000 +0200
+@@ -67,7 +67,7 @@
+ template<typename Key, typename Value>
+ void MinHeap<Key, Value>::Insert(Key k, Value v)
+ {
+-	resize(this->size()+1);
++	this->resize(this->size()+1);
+ 	for(unsigned i = this->size();;) {
+ 		unsigned parent = i/2;
+ 		if(parent == 0 || (*this)[parent-1].first < k) {
