@@ -1,0 +1,12 @@
+diff --git a/hardware/arduino/cores/arduino/Arduino.h b/hardware/arduino/cores/arduino/Arduino.h
+index 830c995..8b378fc 100755
+--- a/hardware/arduino/cores/arduino/Arduino.h
++++ b/hardware/arduino/cores/arduino/Arduino.h
+@@ -5,6 +5,7 @@
+ #include <string.h>
+ #include <math.h>
+ 
++#define __AVR_LIBC_DEPRECATED_ENABLE__ 1
+ #include <avr/pgmspace.h>
+ #include <avr/io.h>
+ #include <avr/interrupt.h>
