@@ -1,3 +1,16 @@
+
+avr-ibc-1.8.0 seems to have depreciated some of the required features
+by the Arduino libraries, resulting in errors:
+
+  hardware/arduino/cores/arduino/HardwareSerial.cpp:91:41:
+      error: attempt to use poisoned "SIG_USART0_RECV"
+
+This patch to the Arduino sources works around that issue.
+
+See also:
+  http://arduino.cc/forum/index.php?topic=92364.0
+
+
 diff --git a/hardware/arduino/cores/arduino/Arduino.h b/hardware/arduino/cores/arduino/Arduino.h
 index 830c995..8b378fc 100755
 --- a/hardware/arduino/cores/arduino/Arduino.h
