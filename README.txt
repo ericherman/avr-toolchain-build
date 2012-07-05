@@ -6,7 +6,7 @@ Matthew Beckler's page at:
 there is documentation on how to build it oneself.
 
 This project automates the work that Matthew documented, and aims to be
-robust to changes in version numbers.
+resilient to changes in version numbers.
 
 To build an avr toolchain from latest sources:
 
