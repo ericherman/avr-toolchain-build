@@ -47,11 +47,8 @@ cd $BUILD_DIR
 # add $PREFIX/bin to PATH, by adding this line to ~/.bashrc
 export PATH=$PATH:$PREFIX/bin
 
-# install newer versions of MPFR and GMP dev packages
-# required to build newer versions of gcc (ubuntu packages)
-# also should pull in 4.1 versions of gcc
 # The texinfo package is used while building binutils.
-# sudo apt-get install libgmp3-dev libmpfr-dev texinfo
+# sudo apt-get install texinfo
 
 # binutils-2.19
 tar xf ${SOURCES}/binutils-*.tar.* &&
@@ -73,8 +70,17 @@ popd &&
 $PREFIX/bin/avr-as --help &&
 
 
-# gcc-core-4.2.3
+# gcc-5.2.0 requires gmp, mpfr, and mpc
 tar xf ${SOURCES}/gcc-*.tar.* &&
+tar xf ${SOURCES}/gmp-*.tar.* &&
+mv -v gmp-* gmp &&
+mv -v gmp ./gcc-*/ &&
+tar xf ${SOURCES}/mpfr-*.tar.* &&
+mv -v mpfr-* mpfr &&
+mv -v mpfr ./gcc-*/ &&
+tar xf ${SOURCES}/mpc-*.tar.* &&
+mv -v mpc-* mpc &&
+mv -v mpc ./gcc-*/ &&
 pushd gcc-* &&
 mkdir build-gcc &&
 cd build-gcc &&
@@ -94,7 +100,7 @@ popd &&
 # to test:
 avr-gcc --version &&
 
-# avr-libc-1.6.4
+# avr-libc-1.8.0
 tar xf ${SOURCES}/avr-libc-*.tar.* &&
 pushd avr-libc-* &&
 mkdir build-avr-libc &&
@@ -110,9 +116,8 @@ make &&
 make install &&
 popd &&
 
-# avrdude-5.8
+# avrdude-6.1
 # sudo apt-get install flex byacc libusb-dev
-
 tar xf ${SOURCES}/avrdude-*.tar.* &&
 pushd avrdude-* &&
 export CC=gcc &&
@@ -124,7 +129,7 @@ export CC= &&
 # TODO add udev magic to fix usb permissions for non-root user using avrdude.
 popd &&
 
-# gdb-6.8
+# gdb-7.10
 # sudo apt-get install libncurses5-dev
 # the above install fixes a warning about "no termcap library found"
 tar xf ${SOURCES}/gdb-*.tar.* &&
