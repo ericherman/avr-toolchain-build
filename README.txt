@@ -25,3 +25,8 @@ To build an avr toolchain from latest sources:
 See also:
   https://github.com/ericherman/arduino-example
   https://github.com/arduino/Arduino
+
+License
+-------
+GNU Lesser General Public License (LGPL), version 3 or later.
+See COPYING.GPL3 and COPYING.LGPL3 for details.
