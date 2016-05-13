@@ -50,7 +50,7 @@ export PATH=$PATH:$PREFIX/bin
 # The texinfo package is used while building binutils.
 # sudo apt-get install texinfo
 
-# binutils-2.19
+# binutils-2.26
 tar xf ${SOURCES}/binutils-*.tar.* &&
 pushd binutils-* &&
 mkdir build-binutils &&
@@ -70,7 +70,7 @@ popd &&
 $PREFIX/bin/avr-as --help &&
 
 
-# gcc-5.2.0 requires gmp, mpfr, and mpc
+# gcc-6.1.0 requires gmp, mpfr, and mpc
 tar xf ${SOURCES}/gcc-*.tar.* &&
 tar xf ${SOURCES}/gmp-*.tar.* &&
 mv -v gmp-* gmp &&
@@ -100,7 +100,7 @@ popd &&
 # to test:
 avr-gcc --version &&
 
-# avr-libc-1.8.0
+# avr-libc-2.0.0
 tar xf ${SOURCES}/avr-libc-*.tar.* &&
 pushd avr-libc-* &&
 mkdir build-avr-libc &&
@@ -116,7 +116,7 @@ make &&
 make install &&
 popd &&
 
-# avrdude-6.1
+# avrdude-6.3
 # sudo apt-get install flex byacc libusb-dev
 tar xf ${SOURCES}/avrdude-*.tar.* &&
 pushd avrdude-* &&
@@ -129,7 +129,7 @@ export CC= &&
 # TODO add udev magic to fix usb permissions for non-root user using avrdude.
 popd &&
 
-# gdb-7.10
+# gdb-7.11
 # sudo apt-get install libncurses5-dev
 # the above install fixes a warning about "no termcap library found"
 tar xf ${SOURCES}/gdb-*.tar.* &&
