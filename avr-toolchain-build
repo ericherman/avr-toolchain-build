@@ -12,7 +12,7 @@
 #  script will now halt if any command fails
 
 PREFIX=$HOME/builds/avr
-BUILD_DIR=/tmp/avr_build
+BUILD_DIR=/tmp/${USER}_avr_build
 SOURCES=${PWD}/tarballs
 PATCHES=${PWD}/patches
 
