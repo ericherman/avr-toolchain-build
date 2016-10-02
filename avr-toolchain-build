@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# terminate after the first line that fails (returns nonzero exit code)
+set -e
+
 
 # Changes: convert to a running script
 # Author:  Eric Herman <eric@freesa.org>
@@ -15,6 +18,7 @@ PREFIX=$HOME/builds/avr
 BUILD_DIR=/tmp/${USER}_avr_build
 SOURCES=${PWD}/tarballs
 PATCHES=${PWD}/patches
+
 
 # avr-gcc toolchain build notes - version 1.2
 # Last updated: January 9, 2010
@@ -44,118 +48,130 @@ rm -rf $BUILD_DIR
 mkdir $BUILD_DIR
 cd $BUILD_DIR
 
+rm -rf $PREFIX.old
+mkdir -p $PREFIX
+mv -v $PREFIX $PREFIX.old
+
 # add $PREFIX/bin to PATH, by adding this line to ~/.bashrc
 export PATH=$PATH:$PREFIX/bin
 
 # The texinfo package is used while building binutils.
 # sudo apt-get install texinfo
 
-# binutils-2.26
-tar xf ${SOURCES}/binutils-*.tar.* &&
-pushd binutils-* &&
-mkdir build-binutils &&
-cd build-binutils &&
-export CC=gcc &&
+# binutils-2.27
+tar xf ${SOURCES}/binutils-*.tar.*
+pushd binutils-*
+mkdir build-binutils
+cd build-binutils
+export CC=gcc
 ../configure \
   --target=avr \
   --prefix=$PREFIX \
   --disable-nsl \
   --enable-install-libbfd \
-  --disable-werror &&
-make &&
-make install &&
-popd &&
+  --enable-install-libiberty \
+  --disable-werror
+make
+make install
+popd
 
 # to test binutils installation:
-$PREFIX/bin/avr-as --help &&
+$PREFIX/bin/avr-as --help
+echo "SUCCESS binutils"
 
 
-# gcc-6.1.0 requires gmp, mpfr, and mpc
-tar xf ${SOURCES}/gcc-*.tar.* &&
-tar xf ${SOURCES}/gmp-*.tar.* &&
-mv -v gmp-* gmp &&
-mv -v gmp ./gcc-*/ &&
-tar xf ${SOURCES}/mpfr-*.tar.* &&
-mv -v mpfr-* mpfr &&
-mv -v mpfr ./gcc-*/ &&
-tar xf ${SOURCES}/mpc-*.tar.* &&
-mv -v mpc-* mpc &&
-mv -v mpc ./gcc-*/ &&
-pushd gcc-* &&
-mkdir build-gcc &&
-cd build-gcc &&
+# gcc-6.2.0 requires gmp, mpfr, and mpc
+tar xf ${SOURCES}/gcc-*.tar.*
+tar xf ${SOURCES}/gmp-*.tar.*
+mv -v gmp-* gmp
+mv -v gmp ./gcc-*/
+tar xf ${SOURCES}/mpfr-*.tar.*
+mv -v mpfr-* mpfr
+mv -v mpfr ./gcc-*/
+tar xf ${SOURCES}/mpc-*.tar.*
+mv -v mpc-* mpc
+mv -v mpc ./gcc-*/
+pushd gcc-*
+mkdir build-gcc
+cd build-gcc
 ../configure \
   --target=avr \
   --prefix=$PREFIX \
   --disable-nsl \
   --enable-languages=c,c++ \
-  --disable-libssp &&
-make &&
+  --disable-libssp
+make
 # sometimes there are PATH issues with "make install",
 # so you might try "sudo su" and then "make install".
 # be sure to 'exit' from the root account before continuing!
-make install &&
-popd &&
+make install
+popd
 
 # to test:
-avr-gcc --version &&
+avr-gcc --version
+echo "SUCCESS gcc"
 
 # avr-libc-2.0.0
-tar xf ${SOURCES}/avr-libc-*.tar.* &&
-pushd avr-libc-* &&
-mkdir build-avr-libc &&
-cd build-avr-libc &&
-export CC=avr-gcc &&
+tar xf ${SOURCES}/avr-libc-*.tar.*
+pushd avr-libc-*
+mkdir build-avr-libc
+cd build-avr-libc
+export CC=avr-gcc
 ../configure \
   --build=`../config.guess` \
   --host=avr \
-  --prefix=$PREFIX &&
-make &&
+  --prefix=$PREFIX
+make
 # again, it might work best to "sudo su" then "make install"
 # be sure to 'exit' from the root account before continuing!
-make install &&
-popd &&
+make install
+popd
+echo "SUCCESS avr-libc"
 
 # avrdude-6.3
 # sudo apt-get install flex byacc libusb-dev
-tar xf ${SOURCES}/avrdude-*.tar.* &&
-pushd avrdude-* &&
-export CC=gcc &&
+tar xf ${SOURCES}/avrdude-*.tar.*
+pushd avrdude-*
+export CC=gcc
 ./configure \
-  --prefix=$PREFIX &&
-make &&
-make install &&
-export CC= &&
+  --prefix=$PREFIX
+make
+make install
+export CC=
 # TODO add udev magic to fix usb permissions for non-root user using avrdude.
-popd &&
+popd
+echo "SUCCESS avrdude"
 
 # gdb-7.11
 # sudo apt-get install libncurses5-dev
 # the above install fixes a warning about "no termcap library found"
-tar xf ${SOURCES}/gdb-*.tar.* &&
-pushd gdb-* &&
+tar xf ${SOURCES}/gdb-*.tar.*
+pushd gdb-*
 ./configure \
   --target=avr \
   --prefix=$PREFIX \
   --disable-werror
-make &&
-make install &&
-popd &&
+make
+make install
+popd
+echo "SUCCESS gdb"
 
 # simulavr-1.0.0
 # sudo apt-get install tcl-dev cvs autoconf libtool swig g++ zlib1g-dev
-tar xf ${SOURCES}/simulavr*.tar.* &&
-pushd simulavr* &&
-./bootstrap &&
+tar xf ${SOURCES}/simulavr*.tar.*
+pushd simulavr*
+./bootstrap
+patch -Np1 -i ${PATCHES}/simulavr-1.0.0-allow-swig-3-version-1.patch
 ./configure \
   --prefix=$PREFIX \
-  --with-bfd=$PREFIX &&
+  --with-bfd=$PREFIX
 # remove both references to 'examples' in the Makefile.
-patch -Np1 -i ${PATCHES}/simulavr-remove-examples.patch &&
-patch -Np1 -i ${PATCHES}/simulavr-1.0.0-fix-resize-1.patch &&
-make &&
-make install &&
-popd &&
+patch -Np1 -i ${PATCHES}/simulavr-remove-examples.patch
+patch -Np1 -i ${PATCHES}/simulavr-1.0.0-fix-resize-1.patch
+patch -Np1 -i ${PATCHES}/simulavr-1.0.0-fix-old-interupt-names-1.patch
+make
+make install
+popd
+echo "SUCCESS simulavr"
 
-echo "YAY"
-
+echo "SUCCESS"
