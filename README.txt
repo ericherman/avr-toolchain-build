@@ -17,6 +17,21 @@ To build an avr toolchain from latest sources:
      consistent with your wishes
    - the script must know what directory to look for the source dependencies
 
+X) if your Arduino library is current, skip this step.
+   however, you *may* need to patch Arduino.h because avr-libc has
+   deprecated features which may be used Arduino.h
+   - locate the header:
+	 find /usr -name Arduino.h 2>/dev/null
+   - apply patch:
+        sudo cp -iv \
+	  /usr/share/arduino/hardware/arduino/cores/arduino/Arduino.h{,.orig}
+	sudo patch -N \
+	  /usr/share/arduino/hardware/arduino/cores/arduino/Arduino.h \
+	  ./patches/arduino_workaround_avr-libc-1.8.0_issue.patch
+   - verify patch:
+        diff -u \
+	  /usr/share/arduino/hardware/arduino/cores/arduino/Arduino.h{,.orig}
+
 3) run "./avr-toolchain-build"
 
 4) Victory!
