@@ -24,6 +24,18 @@ diff -Naur orig.simulavr-1.0.0/examples/atmel_key/StdDefs.h next.simulavr-1.0.0/
     #define UART_DATA_REG        UDR0
  #elif DEVICE_NAME == ATMEGA163
     #define UART_BAUD_REG        UBRR
+diff -Naur orig.simulavr-1.0.0/examples/atmel_key/kb.c next.simulavr-1.0.0/examples/atmel_key/kb.c
+--- orig.simulavr-1.0.0/examples/atmel_key/kb.c	2012-02-12 16:26:38.000000000 +0100
++++ next.simulavr-1.0.0/examples/atmel_key/kb.c	2016-10-02 20:25:09.039950815 +0200
+@@ -36,7 +36,7 @@
+     bitcount = 11;
+ }
+ 
+-SIGNAL(SIG_INTERRUPT0)
++SIGNAL(EXT_INT0_vect)
+ {
+     static unsigned char data;                // Holds the received scan code
+ 
 diff -Naur orig.simulavr-1.0.0/examples/python/ex_pinout.c next.simulavr-1.0.0/examples/python/ex_pinout.c
 --- orig.simulavr-1.0.0/examples/python/ex_pinout.c	2012-02-12 16:26:38.000000000 +0100
 +++ next.simulavr-1.0.0/examples/python/ex_pinout.c	2016-10-02 19:15:08.150233294 +0200
@@ -60,6 +72,30 @@ diff -Naur orig.simulavr-1.0.0/examples/python/example_io.c next.simulavr-1.0.0/
     timer2_ticks++;
  }
  
+diff -Naur orig.simulavr-1.0.0/examples/python/multicore.c next.simulavr-1.0.0/examples/python/multicore.c
+--- orig.simulavr-1.0.0/examples/python/multicore.c	2012-02-12 16:26:38.000000000 +0100
++++ next.simulavr-1.0.0/examples/python/multicore.c	2016-10-02 20:25:09.039950815 +0200
+@@ -11,7 +11,7 @@
+ volatile char cnt_irq = 0;         // IRQ counter
+ volatile char cnt_res = 0;         // measurement value for time distance between events
+ 
+-ISR(SIG_INTERRUPT0) {
++ISR(EXT_INT0_vect) {
+   cnt_irq++;                       // increment event counter
+   cnt_res = TCNT0;                 // save timer value = time distance to last event
+   TCNT0 = 0;                       // reset timer value
+diff -Naur orig.simulavr-1.0.0/regress/extinttest/ext_int0.c next.simulavr-1.0.0/regress/extinttest/ext_int0.c
+--- orig.simulavr-1.0.0/regress/extinttest/ext_int0.c	2012-02-12 16:26:38.000000000 +0100
++++ next.simulavr-1.0.0/regress/extinttest/ext_int0.c	2016-10-02 20:25:09.047950918 +0200
+@@ -94,7 +94,7 @@
+ # if defined(TEST_INT2_16)
+   ISR(SIG_INTERRUPT2) {
+ # else
+-  ISR(SIG_INTERRUPT0) {
++  ISR(EXT_INT0_vect) {
+ # endif
+ #endif
+   cnt_irq++;
 diff -Naur orig.simulavr-1.0.0/regress/timertest/timer_16bit.c next.simulavr-1.0.0/regress/timertest/timer_16bit.c
 --- orig.simulavr-1.0.0/regress/timertest/timer_16bit.c	2012-02-12 16:26:38.000000000 +0100
 +++ next.simulavr-1.0.0/regress/timertest/timer_16bit.c	2016-10-02 19:16:26.879222169 +0200
