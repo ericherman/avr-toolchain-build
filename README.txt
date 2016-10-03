@@ -43,6 +43,13 @@ X) if your Arduino library is current, skip this step.
 4) Victory!
 
 
+NOTES
+-----
+The tarball release version of simulavr has a relatively fragile build.
+In particular, the detection of swig and BFD has been problematic.  The
+git version ( git://git.savannah.nongnu.org/simulavr.git ) seems to be
+easier to build.
+
 See also:
   https://github.com/ericherman/arduino-example
   https://github.com/arduino/Arduino
