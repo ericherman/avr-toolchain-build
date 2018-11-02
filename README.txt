@@ -57,4 +57,4 @@ See also:
 License
 -------
 GNU Lesser General Public License (LGPL), version 3 or later.
-See COPYING.GPL3 and COPYING.LGPL3 for details.
+See COPYING and COPYING.LESSER for details.
