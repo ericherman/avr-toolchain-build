@@ -60,11 +60,10 @@ export PATH=$PATH:$PREFIX/bin
 
 # binutils-2.27
 tar xf ${SOURCES}/binutils-*.tar.*
-pushd binutils-*
 mkdir build-binutils
-cd build-binutils
+pushd build-binutils
 export CC=gcc
-../configure \
+../binutils-*/configure \
   --target=avr \
   --prefix=$PREFIX \
   --disable-nsl \
@@ -146,8 +145,9 @@ echo "SUCCESS avrdude"
 # sudo apt-get install libncurses5-dev
 # the above install fixes a warning about "no termcap library found"
 tar xf ${SOURCES}/gdb-*.tar.*
-pushd gdb-*
-./configure \
+mkdir build-gdb
+pushd build-gdb
+../gdb-*/configure \
   --target=avr \
   --prefix=$PREFIX \
   --disable-werror
@@ -156,22 +156,25 @@ make install
 popd
 echo "SUCCESS gdb"
 
-# simulavr-1.0.0
-# sudo apt-get install tcl-dev cvs autoconf libtool swig g++ zlib1g-dev
-tar xf ${SOURCES}/simulavr*.tar.*
-pushd simulavr*
-./bootstrap
-patch -Np1 -i ${PATCHES}/simulavr-1.0.0-allow-swig-3-version-1.patch
-./configure \
-  --prefix=$PREFIX \
-  --with-bfd=$PREFIX
-# remove both references to 'examples' in the Makefile.
-patch -Np1 -i ${PATCHES}/simulavr-remove-examples.patch
-patch -Np1 -i ${PATCHES}/simulavr-1.0.0-fix-resize-1.patch
-patch -Np1 -i ${PATCHES}/simulavr-1.0.0-fix-old-interupt-names-1.patch
-make
-make install
-popd
-echo "SUCCESS simulavr"
+### # simulavr-1.0.0
+### # sudo apt-get install tcl-dev cvs autoconf libtool swig g++ zlib1g-dev
+### tar xf ${SOURCES}/simulavr*.tar.*
+### pushd simulavr*
+### # ./bootstrap --clean --verbose
+### ./bootstrap --verbose
+### patch -Np1 -i ${PATCHES}/simulavr-1.0.0-allow-swig-3-version-1.patch
+### ./configure \
+###   --prefix=$PREFIX \
+###   --with-bfd=../build-gdb/bfd \
+###   --with-libiberty=../build-gdb/libiberty
+### #
+### # remove both references to 'examples' in the Makefile.
+### patch -Np1 -i ${PATCHES}/simulavr-remove-examples.patch
+### patch -Np1 -i ${PATCHES}/simulavr-1.0.0-fix-resize-1.patch
+### patch -Np1 -i ${PATCHES}/simulavr-1.0.0-fix-old-interupt-names-1.patch
+### make
+### make install
+### popd
+### echo "SUCCESS simulavr"
 
 echo "SUCCESS"

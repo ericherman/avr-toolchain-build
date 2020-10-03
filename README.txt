@@ -13,8 +13,9 @@ To build an avr toolchain from latest sources:
 0) You need a working toolchain and some additional tools, like:
      autoconf bash binutils bison byacc bzip2 coreutils cvs
      diffutils find flex g++ gawk gcc grep gzip libncurses5-dev
-     libtool libusb-dev m4 make patch perl python python-pexpect
-     scons sed subversion swig tar tcl-dev texinfo xz-utils
+     libtool libtool-bin libusb-dev m4 make patch perl python
+     python-pexpect scons sed subversion swig tar tcl-dev texinfo
+     xz-utils
 
 1) use "wget.sh" to download the dependencies
 
